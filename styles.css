@@ -1,0 +1,155 @@
+body {
+    font-family: "Fondamento", cursive;
+    background-color: rgb(235, 234, 231);
+    background-image: url("https://i.imgur.com/W9YCify.png");
+    margin: 0;
+    padding: 0;
+}
+
+.ujjwal-title {
+    font-size: 4.5em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 40px;
+    padding-bottom: 10px;
+    border-bottom: 10px double black;
+}
+
+.ujjwal-date {
+    font: 1em "Roboto Mono", monospace;
+    text-align: center;
+    width: 280px;
+    margin: auto;
+    margin-top: 10px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+}
+
+.filter-group {
+    flex: 1;
+}
+
+.filter-group h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.filter-group label {
+    display: block;
+    margin: 5px 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 0.9em;
+    color: #555;
+    cursor: pointer;
+}
+
+.filter-group input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.ujjwal-columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+.ujjwal-columns > div {
+    flex: 1 1 300px;
+    margin: 10px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ujjwal-columns > div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.ujjwal-columns h1 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.ujjwal-columns p {
+    font-family: "Roboto", sans-serif;
+    text-align: left;
+    line-height: 1.6;
+    color: #555;
+}
+
+.ujjwal-columns img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 15px;
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    image-rendering: pixelated;
+}
+
+.ujjwal-columns .source {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 10px;
+}
+
+.ujjwal-columns .category {
+    font-size: 0.9em;
+    color: #fff;
+    background: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.ujjwal-footer {
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 40px;
+    padding: 15px 0;
+    border-top: 3px double black;
+    border-bottom: 3px double black;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+@media only screen and (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .ujjwal-columns > div {
+        flex: 1 1 100%;
+        margin: 10px 0;
+    }
+
+    .ujjwal-title {
+        font-size: 3em;
+    }
+
+    .ujjwal-date {
+        width: 90%;
+    }
+}
