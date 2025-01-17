@@ -11,8 +11,11 @@
     <div class="ujjwal-title">The Ujjwal Times</div>
     <div class="ujjwal-date" id="currentDate"></div>
 
-    <!-- Filter Section -->
-    <div class="filters">
+    <!-- Toggle Button for Filters -->
+    <button id="filterToggle" onclick="toggleFilters()">Show Filters</button>
+
+    <!-- Collapsible Filter Section -->
+    <div class="filters" id="filterSection" style="display: none;">
         <div class="filter-group">
             <h3>Filter by Source</h3>
             <div id="sourceFilters"></div>

@@ -84,4 +84,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     };
+
+    // Toggle filter section visibility
+    window.toggleFilters = function() {
+        const filterSection = document.getElementById('filterSection');
+        const toggleButton = document.getElementById('filterToggle');
+
+        if (filterSection.style.display === 'none') {
+            filterSection.style.display = 'flex';
+            toggleButton.textContent = 'Hide Filters';
+        } else {
+            filterSection.style.display = 'none';
+            toggleButton.textContent = 'Show Filters';
+        }
+    };
 });
