@@ -54,6 +54,23 @@
 
     <div class="ujjwal-footer">The Ujjwal Times</div>
 
+    <!-- Article Expand Modal -->
+    <div class="article-modal" id="articleModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="article-modal-backdrop" data-close></div>
+        <article class="article-modal-content" role="document">
+            <button class="article-modal-close" type="button" data-close aria-label="Close article">&times;</button>
+            <div class="modal-category" id="modalCategory"></div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <img class="modal-image" id="modalImage" alt="" hidden>
+            <div class="modal-description" id="modalDescription"></div>
+            <a class="modal-link" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">
+                Read full article
+                <span class="modal-link-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+            <div class="modal-source" id="modalSource"></div>
+        </article>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

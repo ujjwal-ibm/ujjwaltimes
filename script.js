@@ -120,6 +120,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     article.classList.add('news-card');
                     article.dataset.source = feed.source;
                     article.dataset.category = feed.category;
+                    // Stored via property assignment (not innerHTML) so they're safe attributes.
+                    article.dataset.link = item.link || '';
+                    article.dataset.title = item.title || '';
+                    article.dataset.description = item.description || '';
+                    article.dataset.image = (item.enclosure && item.enclosure.link) ? item.enclosure.link : '';
+                    article.setAttribute('role', 'button');
+                    article.setAttribute('tabindex', '0');
                     article.innerHTML = `
                         <div class="category">${feed.category}</div>
                         <h1>${item.title}</h1>
@@ -164,4 +171,83 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleButton.textContent = 'Show Filters';
         }
     };
+
+    /* ---------- Article expand / collapse modal ---------- */
+    const modal = document.getElementById('articleModal');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalImage = document.getElementById('modalImage');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalLink = document.getElementById('modalLink');
+    const modalSource = document.getElementById('modalSource');
+
+    let lastFocused = null;
+
+    function openArticleModal(card) {
+        if (!modal || !card) return;
+        lastFocused = document.activeElement;
+
+        modalCategory.textContent = card.dataset.category || '';
+        // titles arrive as plain text from RSS — use textContent to render safely
+        modalTitle.textContent = card.dataset.title || 'Untitled';
+
+        if (card.dataset.image) {
+            modalImage.src = card.dataset.image;
+            modalImage.alt = card.dataset.title || '';
+            modalImage.hidden = false;
+        } else {
+            modalImage.removeAttribute('src');
+            modalImage.hidden = true;
+        }
+
+        // Description can contain HTML in some RSS feeds — match the existing card behaviour.
+        modalDescription.innerHTML = card.dataset.description || '';
+
+        const link = card.dataset.link || '#';
+        modalLink.href = link;
+        modalSource.textContent = card.dataset.source ? 'Source: ' + card.dataset.source : '';
+
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        // Focus the highlighted link so keyboard users can act immediately
+        setTimeout(() => modalLink.focus(), 50);
+    }
+
+    function closeArticleModal() {
+        if (!modal || !modal.classList.contains('is-open')) return;
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        if (lastFocused && typeof lastFocused.focus === 'function') {
+            lastFocused.focus();
+        }
+    }
+
+    // Click on a card opens the modal — but if the click was on the inline source
+    // link inside the card, follow that link instead (it already opens in a new tab).
+    newsColumns.addEventListener('click', function (e) {
+        if (e.target.closest('a')) return;
+        const card = e.target.closest('.news-card');
+        if (card) openArticleModal(card);
+    });
+
+    // Keyboard activation for cards (Enter / Space)
+    newsColumns.addEventListener('keydown', function (e) {
+        const card = e.target.closest('.news-card');
+        if (!card) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openArticleModal(card);
+        }
+    });
+
+    // Any element marked data-close (the blurred backdrop or the × button) closes the modal.
+    modal.addEventListener('click', function (e) {
+        if (e.target.closest('[data-close]')) closeArticleModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeArticleModal();
+    });
 });
