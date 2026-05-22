@@ -1,3 +1,69 @@
+/* ============================================================
+   The Ujjwal Times — theme switcher
+   Persists user choice in localStorage and honours system preference
+   on first visit. Runs before DOMContentLoaded to avoid theme flash.
+   ============================================================ */
+(function () {
+    const STORAGE_KEY = 'ujjwal-theme';
+    const VALID = ['light', 'dark', 'colorful'];
+
+    function preferredTheme() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved && VALID.includes(saved)) return saved;
+        } catch (_e) { /* localStorage may be blocked */ }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        }
+        return 'light';
+    }
+
+    function applyTheme(theme) {
+        if (!VALID.includes(theme)) theme = 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+            const colors = { light: '#ebeae7', dark: '#0e1014', colorful: '#fbc2eb' };
+            meta.setAttribute('content', colors[theme]);
+        }
+        try { localStorage.setItem(STORAGE_KEY, theme); } catch (_e) { /* ignore */ }
+    }
+
+    // Apply ASAP (before paint) to prevent flash of wrong theme.
+    applyTheme(preferredTheme());
+
+    function wireSwitcher() {
+        const buttons = document.querySelectorAll('.theme-btn[data-theme-value]');
+        if (!buttons.length) return;
+        const current = document.documentElement.getAttribute('data-theme');
+
+        function refreshChecked() {
+            const active = document.documentElement.getAttribute('data-theme');
+            buttons.forEach(btn => {
+                btn.setAttribute('aria-checked', btn.dataset.themeValue === active ? 'true' : 'false');
+            });
+        }
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                applyTheme(btn.dataset.themeValue);
+                refreshChecked();
+            });
+        });
+
+        // Reflect initial state
+        const _ = current; // no-op reference
+        refreshChecked();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', wireSwitcher);
+    } else {
+        wireSwitcher();
+    }
+})();
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     document.getElementById('currentDate').textContent = currentDate;
@@ -58,8 +124,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="category">${feed.category}</div>
                         <h1>${item.title}</h1>
                         <p>${item.description}</p>
-                        ${item.enclosure ? `<img src="${item.enclosure.link}" alt="${item.title}">` : ''}
-                        <div class="source">Source: <a href="${item.link}" target="_blank">${feed.source}</a></div>
+                        ${item.enclosure ? `<img src="${item.enclosure.link}" alt="${item.title}" loading="lazy" decoding="async">` : ''}
+                        <div class="source">Source: <a href="${item.link}" target="_blank" rel="noopener">${feed.source}</a></div>
                     `;
                     newsColumns.appendChild(article);
                     allArticles.push(article);
@@ -78,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(article.dataset.category);
 
             if (matchesSource && matchesCategory) {
-                article.style.display = 'block';
+                article.style.display = '';
             } else {
                 article.style.display = 'none';
             }
